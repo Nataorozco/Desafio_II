@@ -41,7 +41,8 @@ Se nos proporciono una tabla; el contenido es tal como se describe acontinuacion
 
 ---
 
-Hay **48 selecciones (aunque el ranking tiene saltos, son 48 filas reales). Cada una tiene:
+
+Hay 48 equipos (selecciones nacionales). Cada equipo tiene:
 
 - Un **Ranking FIFA (número: 1,2,3... Hasta 59).
 - Un **país**
@@ -83,65 +84,75 @@ graph TD
     F --> G([Fin])
 ```
 
-Con este **diagrama** se busca transmitir una nocion del flujo del programa, sin redactar mucho texto. Presta cuidado a el orden de ejecucion. No hay simultaniedad, por lo que se espera que los datos que ocupa cada parte para trabajar sea accesible para todos, y **como criterio de evaluacion** debemos hacer un uso eficiente de memoria mediante *constructores de copia*.
-
 > [!NOTE]
-> 
-
----
+> Con este **diagrama** se busca transmitir una nocion del flujo del programa, sin redactar mucho texto. Presta cuidado a el orden de ejecucion. No hay simultaniedad, por lo que se espera que los componentes que ocupa cada **funcionalidad como entrada** esten el sistema o se creen en una etapa previa.
 
 
-## Carga y actualización de datos
+### Carga y actualización de datos (PRIMERA ETAPA/FEATURE)
 
-Una forma simple de manipular estos datos que entran en formato .csv, es crear una función que lea el archivo y almacene los datos en una estructura de datos adecuada (como un vector o un diccionario). Esto permitirá acceder a la información de manera eficiente durante la simulación del torneo. Sin emabargo, ya que no se puede usar STL, consideramos crear nuestra propia libreria de vectores y diccionarios para manejar estos datos de manera eficiente.
+La tabla que mencionamos al principio del analisís del problema se nos proporciona como un fichero en formato .csv, en esta etapa debemos cargar esos datos y garantizar su acesibilidad a las etapas posteriores, debe contener las funcionalidades base **creacion,lectura y actualizacion** una forma simple de manipular estos datos, es crear una función que lea el archivo y se creen instancia de clase **equipo**.
 
-### Diagrama de clases de bajo nivel para la carga de datos
+Ademas, para facilitar la manipulacion de las clases, en casos donde no se ocupe una **copia profunda** los objetos pueden ser gestionados mediante un arreglo de punteros a objetos **Equipo**.
+
+#### Diagrama de flujo para la carga de datos
 
 ```mermaid
+
+flowchart TD
+    subgraph "Carga y actualización de datos"
+        A[Inicio] --> B[Leer archivo CSV]
+        B --> C{¿Archivo válido?}
+        
+        C -->|No| X[Finalizar proceso]
+        C -->|Sí| D[Inicializar lectura de filas]
+        
+        D --> E{¿Hay más filas?}
+        
+        E -->|Sí| F[Extraer datos:<br/>Ranking, País, Director,<br/>Confederación, GF, GC, PG, PE, PP]
+        F --> G[Crear instancia de la clase Equipo]
+        G --> H[Almacenar puntero en array]
+        H --> D
+        
+        E -->|No| I[Array de punteros a Equipo disponible]
+        
+        I --> J[Operaciones base:<br/>CREAR - LEER - ACTUALIZAR]
+        J --> K[Fin de carga]
+    end
+    
+    subgraph "Acceso a los datos"
+        L[Etapas posteriores] --> M[Uso del array de punteros]
+        M --> N[Acceso a objetos Equipo<br/>sin copias profundas]
+    end
+    
+    K --> L
+
+
+
+```
+
+#### Diagrama de Clases de bajo nivel necesarias para desarrollo
+
+
+```mermaid
+
 classDiagram
-    class FileCSV {
-        -filePath: string
-        +setFilePath(path: string)
-        +toMap() Diccionario
-    }
-    
-    class Diccionario {
-        -claves: string[]
-        -valores: string[]
-        +agregar(clave: string, valor: string)
-        +obtenerValor(clave: string): string
-        +verificarExistencia(clave: string): bool
-        +eliminar(clave: string): bool
-        +tamanio(): int
-    }
-    
+
     class Vector {
-        -elementos: string[]
-        -tamanio: int
-        -capacidad: int
-        +agregarItem(elemento: string)
-        +verificarExistencia(elemento: string): bool
-        +comprimir()
-        +limpiar()
-        +longitud(): int
-        +aleatorio(): string
-        +obtener(indice: int): string
+        - datos : void**
+        - capacidad : int
+        - tamaño : int
+        + Vector(int capacidadInicial)
+        + ~Vector()
+        + agregar(void* elemento)
+        + obtener(int index) void*
+        + eliminar(int index)
+        + redimensionar()
+        + getTamaño() int
     }
-    
-    FileCSV ..> Diccionario : crea
-    Diccionario *-- Vector : Contiene
+
 ```
 
-### Diagrama de flujo para la carga de datos
 
-```mermaid
-
-graph TD
-    A([Inicio]) --> B[Leer archivo CSV]
-    B --> C[Crear instancia de FileCSV]
-    C --> D[Convertir CSV a Diccionario]
-    D --> E([Fin])
-```
 
 ## Conformacion de grupos
 
@@ -168,89 +179,129 @@ Pasamos a simular los partidos, en esta etapa hay algunas consideraciones como:
 ### Diagrama de clases PRINCIPAL para la simulacion de partidos
 
 ```mermaid
+
 classDiagram
-
     class Torneo {
-        - conferederacion_mayor_presencia: string[]
-        - equipos: int[]
-        - etapa_torneo: char[]
-        - tres_mayores_goleadores: string[]
-        - equipos_mas_goles: string[]
-        - maximo_goleador: int
-        - ranking_primeros_4: string[]
+        - equipos : Vector
+        - partidos : Vector
+        - maximoGoleador : Jugador*
+        - tresMayoresGoleadores : Vector
+        - rankingPrimeros4 : Vector
+        - equipoMasGoles : Equipo*
+        - confMayorR16 : string
+        - confMayorR8 : string
+        - confMayorR4 : string
         + iniciarTorneo()
+        + conformarGrupos()
+        + simularEtapas()
         + obtenerTablaPosicion()
-    }
-    
-    
-
-    class Equipo {
-        - federacion_nacional: string 
-        - conferacion_continental: string
-        - director_tecnico: string
-        - ranking_fifa: int
-        - goles_a_favor: int
-        - goles_en_contra: int
-        - partidos_ganados: int
-        - partidos_empatados: int
-        - partidos_perdidos: int
-        - targetas_amarillas: int
-        - targetas_rojas: int
-        - total_faltas_jugadores: int
-        - pais: string
-        + actualizarEstadisticas()
-    }
-
-    class Jugador {
-        - nombre: string
-        - apellido: string
-        - numero_camiseta: string
-        - partidos_jugados: int
-        - goles_anotados: int
-        - minutos_jugados: int
-        - asistencias: int
-        - targetas_amarillas: int
-        - targetas_rojas: int
-        - faltas_acumuladas: int
+        + generarEstadisticasFinales()
     }
 
     class Partido {
-        - fecha_partido: string
-        - hora_partido: string
-        - sede_partido: string
-        - ids_arbitros: string[]
-        - pais_equipo1: string
-        - pais_equipo2: string
-        - goles_equipo1: int
-        - goles_equipo2: int
+        - fechaPartido : string
+        - horaPartido : string
+        - sedePartido : string
+        - idsArbitros : string[3]
+        - equipo1 : Equipo*
+        - equipo2 : Equipo*
+        - golesEquipo1 : int
+        - golesEquipo2 : int
+        - huboProrroga : bool
+        - ganador : Equipo*
+        + Partido(...)
+        + getEquipo1() : Equipo*
+        + getEquipo2() : Equipo*
+        + getGanador() : Equipo*
+        + getGolesEquipo1() : int
+        + getGolesEquipo2() : int
         + simularPartido()
         + registrarResultado()
+        + romperEmpate()
+    }
+
+    class Equipo {
+        - federacionNacional : string
+        - confederacionContinental : string
+        - directorTecnico : string
+        - rankingFIFA : int
+        - pais : string
+        - golesAFavor : int
+        - golesEnContra : int
+        - partidosGanados : int
+        - partidosEmpatados : int
+        - partidosPerdidos : int
+        - tarjetasAmarillas : int
+        - tarjetasRojas : int
+        - totalFaltas : int
+        + Equipo(...)
+        + getPais() : string
+        + getRankingFIFA() : int
+        + getGolesAFavor() : int
+        + getGolesEnContra() : int
+        + sumarGol()
+        + recibirGol()
+        + registrarVictoria()
+        + registrarEmpate()
+        + registrarDerrota()
+    }
+
+    class Jugador {
+        - nombre : string
+        - apellido : string
+        - numeroCamiseta : int
+        - partidosJugados : int
+        - golesAnotados : int
+        - minutosJugados : int
+        - asistencias : int
+        - tarjetasAmarillas : int
+        - tarjetasRojas : int
+        - faltasAcumuladas : int
+        + Jugador(...)
+        + getNombre() : string
+        + getNumeroCamiseta() : int
+        + getGolesAnotados() : int
+        + anotarGol()
+        + jugarMinutos(int)
+        + recibirTarjetaAmarilla()
+        + recibirTarjetaRoja()
+        + cometerFalta()
     }
 
     class Estadisticas {
-        - targetas_amarillas: int
-        - targetas_rojas: int
-        - cantidad_goles_en_contra: int
-        - cantidad_goles_a_favor: int
-        - porcentaje_posecion_balon: float
-        - lista_jugadores_convocados: string[]
-        - faltas: int
+        - tarjetasAmarillas : int
+        - tarjetasRojas : int
+        - faltas : int
         + generarReporte()
     }
 
-    Torneo "1" -- "*" Equipo : Participa
+    class EstadisticaEquipo {
+        - golesAFavor : int
+        - golesEnContra : int
+        - porcentajePosesion : float
+        - jugadoresConvocados : Jugador[11]
+    }
 
-    Equipo "1" -- "*" Jugador : Tiene
+    class EstadisticaJugador {
+        - goles : int
+        - minutosJugados : int
+    }
 
-    Equipo "*" -- "*" Partido : Juegan
+    %% HERENCIA
+    Estadisticas <|-- EstadisticaEquipo
+    Estadisticas <|-- EstadisticaJugador
 
-    Partido "1" -- "1" Estadisticas : Genera
+    %% RELACIONES PRINCIPALES
+    Torneo "1" -- "*" Partido : organiza
+    Partido "1" -- "2" Equipo : enfrenta
+    Equipo "1" *-- "*" Jugador : tiene
 
-    Jugador "1" -- "*" Estadisticas : Registra
+    %% ESTADISTICAS
+    Partido "1" -- "*" EstadisticaEquipo : genera
+    Equipo "1" -- "*" EstadisticaEquipo : registra
 
-
-
-    
+    Partido "1" -- "*" EstadisticaJugador : genera
+    Jugador "1" -- "*" EstadisticaJugador : registra 
 
 ```
 
