@@ -2,7 +2,7 @@
 
 Cordial saludo esta es una actividad del curso Informatica 2, corresponde a el desafio 2. A continuacion se detalla el proceso de analisis y diseño de sistema solicitado.
 
-**FIFA 2026**: Consiste en desarrollar un programa de consola en c++ (cons POO) para la simulacion de los partidos del mundial de futbol FIFA 2026 aprovechando datos historicos.
+**FIFA 2026**: Consiste en desarrollar un programa de consola en c++ (con POO) para la simulacion de los partidos del mundial de futbol FIFA 2026 aprovechando datos historicos.
 
 Se deben cubrir las siguientes funcionalidades:
 
@@ -16,11 +16,62 @@ Se deben cubrir las siguientes funcionalidades:
 
 ## Analisís del problema
 
-Entremos en detalle, porque si decimos (simular). No queda lo suficientemente clara la idea. En este caso particular. Con simular nos referimos a generar un resultado teorico del torneo considerando (probabilidades/tendecias) con sierto grado de aleatoriedad. Es decir, no se trata de generar resultados completamente aleatorios, sino en aprovechar datos historicos. Y combinarlo con un modelo (sistema que aprovecha esos datos) para generar resultados teoricos.
+---
 
-Ahora pasando a evaluar el como de la solucion teorica, surgen algunas preguntas, obviaremos concocimientos de futbol, y nos centraremos en el como de la solucion. Para esto, se pueden identificar algunos puntos clave:
+> [!WARNING]
+> La simulacion no comprende todas las mecanicas de juego en la vida real sino que se centra en generar un resultado, que toma como directriz los criterios de la actividad y cito **"La simulación se centra en la obtención de los resultados indicados y no en emular las dinámicas de juego internas de los partidos"** (Desafio Info 2026-1 v.1.1).
+
+---
+
+Se nos proporciono una tabla; el contenido es tal como se describe acontinuacion (fidelidad de columnas por fila).  
+
+| Ranking FIFA | País | Director técnico | Federación de fútbol | Confederación | Goles a favor | Goles en contra | Partidos ganados | Partidos empatados | Partidos perdidos |
+|--------------|------|------------------|----------------------|---------------|---------------|----------------|------------------|--------------------|--------------------|
+| 1 | France | Didier Deschamps | French Football Federation | UEFA | 20 | 5 | 7 | 1 | 0 |
+| 2 | Spain | Luis de la Fuente | Royal Spanish Football Federation | UEFA | 20 | 5 | 7 | 1 | 0 |
+| 3 | Argentina | Lionel Scaloni | Argentina Football Association | CONMEBOL | 26 | 8 | 8 | 1 | 1 |
+| 4 | England | Thomas Tuchel | The Football Association | UEFA | 20 | 5 | 7 | 1 | 0 |
+| 5 | Portugal | Roberto Martinez | Portuguese Football Federation | UEFA | 20 | 5 | 7 | 1 | 0 |
+| 6 | Brazil | Dorival Junior | Brazilian Football Confederation | CONMEBOL | 20 | 7 | 6 | 3 | 1 |
+| 7 | Netherlands | Ronald Koeman | Royal Dutch Football Association | UEFA | 20 | 5 | 7 | 1 | 0 |
+| . | ----------- | ------------- | -------------------------------- | ---- | -- | - | - | - | - |
+| . | ----------- | ------------- | -------------------------------- | ---- | -- | - | - | - | - |
+| . | ----------- | ------------- | -------------------------------- | ---- | -- | - | - | - | - |
+| 59 | Cabo Verde | Bubista | Cape Verdean Football Federation | CAF | 10 | 1 | 5 | 1 | 0 |
+
+---
+
+Hay **48 selecciones (aunque el ranking tiene saltos, son 48 filas reales). Cada una tiene:
+
+- Un **Ranking FIFA (número: 1,2,3... Hasta 59).
+- Un **país**
+- Un **director técnico** (no lo usaremos mucho pero ahí está).
+- **Estadisticas hístoricas:** Goles a favor (GF), goles en contra (GC), partidos ganados (PG), empatados (PE), perdidos (PP)
+
+---
+
+Cada selección tiene 26 jugadores. Del archivo no sabemos quiénes son un requisito es fabricarlos artificialmente en un principio:
+
+- Les ponemos camisetas del 1 al 26.
+- Les asignamos nombres genéricos: "nombre1", "apellido1", "nombre2", "apellido2", etc.
+- Sus estadísticas individuales empiezan en cero, excepto los goles.
+
+### Pregunta central del **Desafío**
+
+¿Como podemos determinar quién ganaría el mundial con esta información?: No podemos simplemente decir "el de mejor ranking gana", porque el fútbol tiene sorpresas. Pero tampoco queremos resultados completamente al azar. Necesitamos un **mecanismo intermedio**. Es precisamente el **mecanismo intermedio** lo que nos ocupa.
+
 
 ### ¿Cual es el flujo general del simulador?
+
+La idea de **simular** partidos es un reto interesante, sin embargo, no debemos olvidar que este **Desafío/Taller** no busca **emular un resultado realista** sino en **obtener un resultado**, por lo tanto partimos de un logica simple:
+
+- Un equipo que históricamente hace muchos goles, probablemente seguirá haciéndolos.
+- Un equipo que históricamente recibe muchos goles, probablemente seguirá recibiéndolos.
+
+---
+
+En este punto, ya hemos proporcionado una nocion incial de **que y como** se desarrollará el **simulador**. Ahora abordaremos **funcionalidades/partes** del sistema.
+
 
 ```mermaid
 graph TD
@@ -31,6 +82,11 @@ graph TD
     E --> F[Medición del consumo de recursos]
     F --> G([Fin])
 ```
+
+Con este **diagrama** se busca transmitir una nocion del flujo del programa, sin redactar mucho texto. Presta cuidado a el orden de ejecucion. No hay simultaniedad, por lo que se espera que los datos que ocupa cada parte para trabajar sea accesible para todos, y **como criterio de evaluacion** debemos hacer un uso eficiente de memoria mediante *constructores de copia*.
+
+> [!NOTE]
+> 
 
 ---
 
@@ -198,6 +254,8 @@ classDiagram
 
 ```
 
+> [!NOTE]
+> El desafío actual tiene un **contexto guía** en el que se usa un lenguaje tecnico, y aunque con algo de analisis y dedicacion, podemos llegar a una respuesta intuitiva, la necesidad de planear en este informe **analisis del problema** supone **simplificacion**.
 
 ---
 
@@ -206,3 +264,5 @@ classDiagram
 > - [ ] Analisis del problema
 > - [ ] Diagrama de clases
 > - [ ] 4 Algoritmos
+
+---
