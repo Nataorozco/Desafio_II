@@ -162,11 +162,41 @@ En la etapa de carga de datos, se crea una estructura de datos que almacena la i
 
 ```mermaid
 
-graph TD
-    A([Inicio]) --> B[Crear Bombos]
-    B --> C[Agregar equipos a los bombos segun requisitos]
-    C --> D[Conformar grupos de manera aleatoria]
-    D --> E([Fin])
+flowchart TD
+    A[Inicio] --> B[Obtener equipos desde Vector]
+
+    B --> C[Buscar equipo anfitrión USA]
+
+    C --> D[Asignar USA al Grupo A]
+
+    D --> E[Eliminar USA de la lista de equipos]
+
+    E --> F[Ordenar equipos restantes por ranking FIFA]
+
+    F --> G[Crear bombos 1-4]
+
+    G --> H[Inicializar grupos Grupo A ya tiene 1 equipo]
+
+    H --> I{¿Todos los grupos completos?}
+
+    I -->|No| J[Seleccionar grupo actual]
+
+    J --> K[Seleccionar equipo aleatorio del bombo correspondiente]
+
+    K --> L{¿Cumple restricciones de confederación?}
+
+    L -->|No| K
+
+    L -->|Sí| M[Asignar equipo al grupo]
+
+    M --> N[Eliminar equipo del bombo]
+
+    N --> I
+
+    I -->|Sí| O[Grupos conformados]
+
+    O --> P[Mostrar grupos]
+    P --> Q[Fin]
 
 ```
 
@@ -181,127 +211,86 @@ Pasamos a simular los partidos, en esta etapa hay algunas consideraciones como:
 ```mermaid
 
 classDiagram
-    class Torneo {
-        - equipos : Vector
-        - partidos : Vector
-        - maximoGoleador : Jugador*
-        - tresMayoresGoleadores : Vector
-        - rankingPrimeros4 : Vector
-        - equipoMasGoles : Equipo*
-        - confMayorR16 : string
-        - confMayorR8 : string
-        - confMayorR4 : string
-        + iniciarTorneo()
-        + conformarGrupos()
-        + simularEtapas()
-        + obtenerTablaPosicion()
-        + generarEstadisticasFinales()
-    }
 
-    class Partido {
-        - fechaPartido : string
-        - horaPartido : string
-        - sedePartido : string
-        - idsArbitros : string[3]
-        - equipo1 : Equipo*
-        - equipo2 : Equipo*
-        - golesEquipo1 : int
-        - golesEquipo2 : int
-        - huboProrroga : bool
-        - ganador : Equipo*
-        + Partido(...)
-        + getEquipo1() : Equipo*
-        + getEquipo2() : Equipo*
-        + getGanador() : Equipo*
-        + getGolesEquipo1() : int
-        + getGolesEquipo2() : int
-        + simularPartido()
-        + registrarResultado()
-        + romperEmpate()
-    }
+class Torneo {
+    - equipos : Vector
+    - partidos : Vector
+    - grupos : Vector
+    - maximoGoleador : Jugador*
+    - topGoleadores : Vector
+    - rankingFinal : Vector
+    + iniciarTorneo()
+    + cargarDatos()
+    + conformarGrupos()
+    + simularFaseGrupos()
+    + simularEliminatorias()
+    + generarEstadisticasFinales()
+}
 
-    class Equipo {
-        - federacionNacional : string
-        - confederacionContinental : string
-        - directorTecnico : string
-        - rankingFIFA : int
-        - pais : string
-        - golesAFavor : int
-        - golesEnContra : int
-        - partidosGanados : int
-        - partidosEmpatados : int
-        - partidosPerdidos : int
-        - tarjetasAmarillas : int
-        - tarjetasRojas : int
-        - totalFaltas : int
-        + Equipo(...)
-        + getPais() : string
-        + getRankingFIFA() : int
-        + getGolesAFavor() : int
-        + getGolesEnContra() : int
-        + sumarGol()
-        + recibirGol()
-        + registrarVictoria()
-        + registrarEmpate()
-        + registrarDerrota()
-    }
+class Partido {
+    - fecha : string
+    - hora : string
+    - sede : string
+    - arbitros : string[3]
+    - equipo1 : Equipo*
+    - equipo2 : Equipo*
+    - golesEquipo1 : int
+    - golesEquipo2 : int
+    - huboProrroga : bool
+    - ganador : Equipo*
+    + simularPartido()
+    + romperEmpate()
+    + actualizarEstadisticas()
+}
 
-    class Jugador {
-        - nombre : string
-        - apellido : string
-        - numeroCamiseta : int
-        - partidosJugados : int
-        - golesAnotados : int
-        - minutosJugados : int
-        - asistencias : int
-        - tarjetasAmarillas : int
-        - tarjetasRojas : int
-        - faltasAcumuladas : int
-        + Jugador(...)
-        + getNombre() : string
-        + getNumeroCamiseta() : int
-        + getGolesAnotados() : int
-        + anotarGol()
-        + jugarMinutos(int)
-        + recibirTarjetaAmarilla()
-        + recibirTarjetaRoja()
-        + cometerFalta()
-    }
+class Equipo {
+    - pais : string
+    - rankingFIFA : int
+    - directorTecnico : string
+    - confederacion : string
 
-    class Estadisticas {
-        - tarjetasAmarillas : int
-        - tarjetasRojas : int
-        - faltas : int
-        + generarReporte()
-    }
+    - golesAFavor : int
+    - golesEnContra : int
+    - PG : int
+    - PE : int
+    - PP : int
 
-    class EstadisticaEquipo {
-        - golesAFavor : int
-        - golesEnContra : int
-        - porcentajePosesion : float
-        - jugadoresConvocados : Jugador[11]
-    }
+    - jugadores : Vector
 
-    class EstadisticaJugador {
-        - goles : int
-        - minutosJugados : int
-    }
+    + getTotalPartidos() int
+    + getPromedioGF() double
+    + getPromedioGC() double
 
-    %% HERENCIA
-    Estadisticas <|-- EstadisticaEquipo
-    Estadisticas <|-- EstadisticaJugador
+    + registrarVictoria()
+    + registrarEmpate()
+    + registrarDerrota()
+    + sumarGol()
+    + recibirGol()
+}
 
-    %% RELACIONES PRINCIPALES
-    Torneo "1" -- "*" Partido : organiza
-    Partido "1" -- "2" Equipo : enfrenta
-    Equipo "1" *-- "*" Jugador : tiene
+class Jugador {
+    - nombre : string
+    - apellido : string
+    - numero : int
 
-    %% ESTADISTICAS
-    Partido "1" -- "*" EstadisticaEquipo : genera
-    Equipo "1" -- "*" EstadisticaEquipo : registra
+    - goles : int
+    - minutos : int
+    - tarjetasAmarillas : int
+    - tarjetasRojas : int
+    - faltas : int
 
-    Partido "1" -- "*" EstadisticaJugador : genera
-    Jugador "1" -- "*" EstadisticaJugador : registra 
+    + anotarGol()
+    + jugarMinutos(int)
+    + recibirAmarilla()
+    + recibirRoja()
+    + cometerFalta()
+}
+
+%% RELACIONES
+Torneo "1" -- "*" Partido : organiza
+Torneo "1" -- "*" Equipo : contiene
+Partido "1" -- "2" Equipo : enfrenta
+Equipo "1" *-- "*" Jugador : tiene
 
 ```
 
