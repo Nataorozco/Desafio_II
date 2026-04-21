@@ -10,7 +10,8 @@ include_directories(include)
 # 2. Registramos los archivos indicando en qué carpeta están
 add_executable(FIFA2026_Simulador
     src/main.cpp
-    src/vector.cpp
+
+    src/equipo.cpp
 )
 
 # 3. Configuración obligatoria de Qt
