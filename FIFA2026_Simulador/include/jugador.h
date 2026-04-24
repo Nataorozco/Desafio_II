@@ -8,7 +8,7 @@ private:
     // Identificación (Requisito I: nombres fabricados artificialmente)
     std::string nombre;
     std::string apellido;
-    int numeroCamiseta;
+    std::string numeroCamiseta;
 
     // Estadísticas que se actualizan tras cada partido
     int partidosJugados;
@@ -22,7 +22,7 @@ private:
 public:
     // (Constructor de copia obligatorio)
     Jugador();
-    Jugador(std::string nom, std::string ape, int num);
+    Jugador(std::string nom, std::string ape, std::string numCam);
     Jugador(const Jugador& otro); // Fundamental para el manejo de memoria
 
     // Métodos de actualización de estadísticas
@@ -34,9 +34,14 @@ public:
 
     // Getters para el informe final de estadísticas
     std::string getNombreCompleto() const;
+    std::string getCamiseta() const;
     int getGoles() const;
+    int getTjAmarillas() const;
+    int getTjRojas() const;
+    int getTjFaltas() const;
 
     ~Jugador();
+
 };
 
 #endif

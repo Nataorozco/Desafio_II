@@ -11,7 +11,18 @@ include_directories(include)
 add_executable(FIFA2026_Simulador
     src/main.cpp
 
+    src/torneo.cpp
+    src/partido.cpp
     src/equipo.cpp
+    src/jugador.cpp
+
+    include/vector.h
+
+    include/torneo.h
+    include/partido.h
+    include/equipo.h
+    include/jugador.h
+    importAndExport/selecciones_clasificadas_mundial.csv
 )
 
 # 3. Configuración obligatoria de Qt

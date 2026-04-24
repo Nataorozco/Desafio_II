@@ -11,19 +11,27 @@ using std::string;
 
 
 class Torneo {
-    private:
-        Vector<Equipo*> equipos;
-        Vector<Partido*> partidos;
-        Jugador* maximoGoleador;
-        Vector<Jugador*> topGoleadores;
-        Vector<Equipo*> rankingFinal;
+private:
+    Vector<Equipo*> equipos;
+    Vector<Partido*> partidos;
+    Jugador* maximoGoleador;
+    Vector<Jugador*> topGoleadores;
+    Vector<Equipo*> rankingFinal;
 
-    public:
-        void cargarDatos();
-        void conformarFaseGrupos();
-        void simularFaseGrupos();
-        void simularEliminatorias();
-        void generarEstadisticasFinales();
+public:
+    Torneo();
+    ~Torneo();
+
+    // Métodos principales
+    void cargarDatos(const string& rutaCSV);
+    void conformarFaseGrupos();
+    void simularFaseGrupos();
+    void simularEliminatorias();
+    void generarEstadisticasFinales();
+
+    // Getters
+    Vector<Equipo*>& getEquipos() { return equipos; }
+    int getNumeroEquipos() const { return equipos.getTamano(); }
 };
 
 #endif
