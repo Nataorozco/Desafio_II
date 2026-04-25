@@ -130,7 +130,7 @@ Partiendo de abajo hacia arriba
 
 ### Logica de Generacion de Datos
 
-- [ ] Implementar algoritmo de Generacion Artificial: Nombres genericos y numeros de camiseta consecutivos (1 a 26).
+- [X] Implementar algoritmo de Generacion Artificial: Nombres genericos y numeros de camiseta consecutivos (1 a 26).
 - [ ] Crear algoritmo de **Reparto Uniforme de Goles**: Distribuir los goles historicos del equipo entre sus jugadores.
 
 ### Persistencia
