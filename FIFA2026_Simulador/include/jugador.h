@@ -28,6 +28,7 @@ public:
     // Métodos de actualización de estadísticas
     void jugarPartido();
     void anotarGol();
+    void setGoles(int n); // Solo para carga inicial
     void sumarMinutos(int min);
     void asistir();
     void recibirAmarilla();

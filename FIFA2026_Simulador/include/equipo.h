@@ -66,6 +66,9 @@ public:
 
     // Método para generar jugadores artificiales
     void generarJugadores();
+
+    // Método para repatir goles
+    void repartirGolesCargaInicial();
 };
 
 #endif // EQUIPO_H

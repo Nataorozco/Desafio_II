@@ -131,7 +131,7 @@ Partiendo de abajo hacia arriba
 ### Logica de Generacion de Datos
 
 - [X] Implementar algoritmo de Generacion Artificial: Nombres genericos y numeros de camiseta consecutivos (1 a 26).
-- [ ] Crear algoritmo de **Reparto Uniforme de Goles**: Distribuir los goles historicos del equipo entre sus jugadores.
+- [x] Crear algoritmo de **Reparto Uniforme de Goles**: Distribuir los goles historicos del equipo entre sus jugadores.
 
 ### Persistencia
 
@@ -143,4 +143,14 @@ Partiendo de abajo hacia arriba
 - [ ] Verificar que la suma de goles de los jugadores coincida con el total del equipo tras la carga inicial.
 - [ ] Comprobar que los archivos de salida se generan correctamente y son legibles.
 
+## Novedades de avance
 
+> [!IMPORTANT]
+> Los primeros 3 elementos de la lista de tareas no se mencionan a acontinuacion debido a la falta del tiempo con el que se cuenta para desarrollar, los detalles sobre lo que se hizo estan en el mensaje del commit.
+
+### Reparto Uniforme de Goles
+
+Fue necesario invetigar en que consiste el **reparto uniforme** y se llego a la **definicion tecnica de distribución uniforme en un conjunto discreto**. Bastante interesante por cierto, una propuesta compleja es _**un reparto equitativo con sorteo de sobrantes**, donde cada jugador recibe una base igual y los goles restantes se rifan de uno en uno para que nadie tenga nunca más de un gol de ventaja sobre los demás._ Sin emargo, se opto por una solucion mas simple que consiste en _**un reparto equitativo determinista** donde todos reciben una base igual y los sobrantes se asignan por orden de lista a los primeros jugadores hasta agotarse._
+
+> [!IMPORTANT]
+> Considerando que los jugadores seleccionados para un partido tienen cierto indice de aleatoriedad, el determinismo no favorece ni entorpese los enfrentamientos.

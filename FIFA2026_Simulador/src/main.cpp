@@ -17,7 +17,7 @@ int main() {
     torneo.cargarDatos("C:/Users/elmer/dev/studentspace/Desafio_II/FIFA2026_Simulador/importAndExport/selecciones_clasificadas_mundial.csv");
 
     Vector<Equipo*>& equipos = torneo.getEquipos();
-    Equipo* equipo = equipos[0];
+    Equipo* equipo = equipos[10];
 
     cout << "\nJugadores del equipo " << equipo->getPais() <<  " en el sistema:" << endl;
 
@@ -26,6 +26,7 @@ int main() {
     for (int i = 0; i < jugadores.getTamano(); ++i) {
         Jugador* jugador = jugadores[i];
         cout << "\n  Jugador["+to_string(i)<< "]: " << jugador->getNombreCompleto() << " " << jugador->getCamiseta() << endl;
+        cout << "  Cantidad de goles " << jugador->getGoles() << endl;
     }
 
     return 0;

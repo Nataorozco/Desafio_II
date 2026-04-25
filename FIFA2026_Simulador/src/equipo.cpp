@@ -63,3 +63,21 @@ void Equipo::generarJugadores(){
         jugadores.push_back(jugador);
     }
 }
+
+void Equipo::repartirGolesCargaInicial() {
+    if (jugadores.getTamano() == 0) return;
+
+    // 1. Calcular cuántos goles le tocan a todos por igual
+    int golesBase = golesAFavor / MAX_JUGADORES;
+
+    // 2. Calcular cuántos goles sobran (residuo)
+    int residuo = golesAFavor % MAX_JUGADORES;
+
+    for (int i = 0; i < jugadores.getTamano(); ++i) {
+        // Los primeros 'residuo' jugadores reciben un gol extra
+        int golesParaEsteJugador = golesBase + (i < residuo ? 1 : 0);
+
+        // 3. Asignar al objeto jugador
+        jugadores[i]->setGoles(golesParaEsteJugador);
+    }
+}

@@ -95,6 +95,9 @@ void Torneo::cargarDatos(const string& rutaCSV) {
                                              partidosGanados, partidosEmpatados,
                                              partidosPerdidos);
 
+            // Asignar goles a judaores
+            nuevoEquipo->repartirGolesCargaInicial();
+
             // Almacenar PUNTERO en Vector de punteros (sin copia profunda)
             equipos.push_back(nuevoEquipo);
             equiposCargados++;

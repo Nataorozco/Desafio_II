@@ -28,6 +28,7 @@ Jugador::Jugador(const Jugador& otro) {
 // Lógica simple para actualizar el desempeño deportivo
 void Jugador::jugarPartido() { partidosJugados++; }
 void Jugador::anotarGol() { goles++; }
+void Jugador::setGoles(int n) { goles+=n; }
 void Jugador::sumarMinutos(int min) { minutosJugados += min; }
 void Jugador::asistir() {asistencias++;}
 void Jugador::recibirAmarilla() { tarjetasAmarillas++; }
