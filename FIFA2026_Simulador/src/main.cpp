@@ -21,9 +21,9 @@ int main() {
 
     cout << "\nJugadores del equipo " << equipo->getPais() <<  " en el sistema:" << endl;
 
-    Vector<Jugador*>& jugadores = equipo->getJugadores();
+    const Vector<Jugador*>& jugadores = equipo->getJugadores();
 
-    for (int i = 0; i < 26; ++i) {
+    for (int i = 0; i < jugadores.getTamano(); ++i) {
         Jugador* jugador = jugadores[i];
         cout << "\n  Jugador["+to_string(i)<< "]: " << jugador->getNombreCompleto() << " " << jugador->getCamiseta() << endl;
     }

@@ -126,8 +126,7 @@ Partiendo de abajo hacia arriba
 ### Modelado de Clases:
 
 - [x] Crear/Corregir la clase Jugador (incluir: numero de camiseta, nombre/apellido generico y los 7 contadores de estadisticas).
-- [ ] Crear/Corregir la clase Equipo (lista de jugadores y datos histOricos del ranking).
-- [ ] 
+- [x] Crear/Corregir la clase Equipo (lista de jugadores y datos historicos del ranking).
 
 ### Logica de Generacion de Datos
 

@@ -63,7 +63,12 @@ public:
         return data[indice];
     }
 
-    // 6. Método push_back con eficiencia en instrucciones [3]
+    // 6. Sobrecarga de Operador [] solo lectura
+    const T& operator[](int indice) const {
+        return data[indice];
+    }
+
+    // 7. Método push_back con eficiencia en instrucciones [3]
     void push_back(const T& elemento) {
         if (tamano == capacidad) {
             // Criterio de eficiencia: duplicar capacidad para reducir llamadas a 'new'
@@ -73,10 +78,10 @@ public:
         data[tamano++] = elemento;
     }
 
-    // 7. Métodos de utilidad
+    // 8. Métodos de utilidad
     int getTamano() const { return tamano; }
 
-    // 8. Medición de consumo de memoria (Requisito V [5])
+    // 9. Medición de consumo de memoria (Requisito V [5])
     size_t calcularMemoria() const {
         size_t memoriaBase = sizeof(*this);
         size_t memoriaDinamica = sizeof(T) * capacidad;

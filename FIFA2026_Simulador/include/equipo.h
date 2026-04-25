@@ -27,6 +27,9 @@ private:
     // Jugadores del equipo
     Vector<Jugador*> jugadores;
 
+    // De enorno
+    static const int MAX_JUGADORES = 26;
+
 public:
     // Constructor
     Equipo(int ranking, const string& pais, const string& director,
@@ -49,7 +52,7 @@ public:
     int getPartidosEmpatados() const { return partidosEmpatados; }
     int getPartidosPerdidos() const { return partidosPerdidos; }
 
-    Vector<Jugador*>& getJugadores() { return jugadores; }
+    const Vector<Jugador*>& getJugadores() const { return jugadores; }
 
     // Métodos de utilidad
     int getTotalPartidos() const;
