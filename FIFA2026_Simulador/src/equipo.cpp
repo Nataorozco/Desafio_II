@@ -57,10 +57,9 @@ void Equipo::registrarDerrota(int golesRecibidos) {
 void Equipo::generarJugadores(){
     string nombreBase = "nombre";
     string apellidoBase = "apellido";
-    string camisetaBase = "camiseta";
 
     for (int i = 1; i <= 26; ++i) {
-        Jugador* jugador = new Jugador(nombreBase+to_string(i), apellidoBase+to_string(i), camisetaBase+to_string(i));
+        Jugador* jugador = new Jugador(nombreBase+to_string(i), apellidoBase+to_string(i), i);
         jugadores.push_back(jugador);
     }
 }
