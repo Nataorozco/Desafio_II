@@ -13,8 +13,10 @@ int main() {
     // Crear instancia del torneo
     Torneo torneo;
 
+    string rutaRelativa = "importAndExport/selecciones_clasificadas_mundial.csv";
+
     // Cargar datos desde el CSV
-    torneo.cargarDatos("C:/Users/elmer/dev/studentspace/Desafio_II/FIFA2026_Simulador/importAndExport/selecciones_clasificadas_mundial.csv");
+    torneo.cargarDatos(rutaRelativa);
 
     Vector<Equipo*>& equipos = torneo.getEquipos();
     Equipo* equipo = equipos[10];

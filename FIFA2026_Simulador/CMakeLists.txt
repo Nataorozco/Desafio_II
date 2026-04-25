@@ -28,3 +28,7 @@ add_executable(FIFA2026_Simulador
 # 3. Configuración obligatoria de Qt
 find_package(Qt6 REQUIRED COMPONENTS Core)
 target_link_libraries(FIFA2026_Simulador PRIVATE Qt6::Core)
+
+# 4. Copiar automáticamente el CSV a la carpeta de salida
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/importAndExport"
+     DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

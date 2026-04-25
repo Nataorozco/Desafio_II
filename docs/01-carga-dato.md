@@ -135,12 +135,12 @@ Partiendo de abajo hacia arriba
 
 ### Persistencia
 
-- [ ] Crear modulo de Gestion de Archivos (Lectura de selecciones_clasificadas_mundial.csv).
+- [x] Crear modulo de Gestion de Archivos (Lectura de selecciones_clasificadas_mundial.csv).
 - [ ] Implementar logica de escritura de los nuevos archivos .csv (formato matriz Numero de Camiseta vs Pais).
 
 ### Validacion
 
-- [ ] Verificar que la suma de goles de los jugadores coincida con el total del equipo tras la carga inicial.
+- [x] Verificar que la suma de goles de los jugadores coincida con el total del equipo tras la carga inicial.
 - [ ] Comprobar que los archivos de salida se generan correctamente y son legibles.
 
 ## Novedades de avance
@@ -154,3 +154,14 @@ Fue necesario invetigar en que consiste el **reparto uniforme** y se llego a la 
 
 > [!IMPORTANT]
 > Considerando que los jugadores seleccionados para un partido tienen cierto indice de aleatoriedad, el determinismo no favorece ni entorpese los enfrentamientos.
+
+### Crear modulo de Gestion de Archivos
+
+Esto ya se habia desarrollado previamente, se hizo una modificacion para eliminar la referencia a rutas absolutas. Mediante una copia gestionable desde el CMakeList.txt
+
+```cmake
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/importAndExport"
+     DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
+```
