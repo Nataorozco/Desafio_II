@@ -91,14 +91,15 @@ Hasta este punto de comprede la parte inicial de carga de datos **importacion**,
 
 ## Ruta solutiva a partir de analsís
 
-Los resultados del torneo se guardaran en multiples archivos con todos los equipos, usando los numeros de camiseta como identificadores referenciales a los jugadores.
+Los resultados del torneo se guardaran en multiples archivos:
+
+Para los jugadores 7 ficheros agrupando **1 estadistica 1 fichero** usando los numeros de camiseta como identificadores referenciales a los jugadores.
+
+Para los equipo 1 con todos los equipos, la estructura de este, es similar a el fichero de impotacion inicial.
 
 El formato de los ficheros igualmente en **csv** debido a la estandarizacion de un formato con separacion, y del cual hay una gran comunidad (foros, tutoriales), que aplanan la curva de aprendizaje para esta actividad. Un formato personalizado requiere una justificacion mas estendida.
 
 El contenido de cada fichero `.csv` debe estructurarse de la siguiente manera:
-
-> [!NOTE]
-> La unica forma de distingir si se habla de goles o faltas, es la forma en la que se organiza la informacion. Ya que todos los ficheros tendran el formato de estructura de datos.
 
 ### goles-por-judaor.csv
 
@@ -114,6 +115,22 @@ El contenido de cada fichero `.csv` debe estructurarse de la siguiente manera:
 | ... | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Cabo Verde| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
+> [!IMPORTANT]
+> Un fichero por cada aspecto estadistico (7 en total) unica forma de distingir si se habla de goles o faltas, es la forma en la que se organiza la informacion; el nombre del archivo y la implentacion interna del programa. Ya que todos los ficheros tendran el mismo formato de estructura de datos matricial.
+
+### informacion-por-equipos.csv
+
+| (Estadistica →) (País ↓) | Goles a favor | Goles en contra | Partidos ganados | Partidos empatados | Partidos perdidos |
+|-- | - | - | - | - | - |
+| France | 0 | 0 | 0 | 0 | 0 | 0 |
+| Spain | 0 | 0 | 0 | 0 | 0 | 0 |
+| Argentina| 0 | 0 | 0 | 0 | 0 | 0 |
+| England| 0 | 0 | 0 | 0 | 0 | 0 |
+| Portugal| 0 | 0 | 0 | 0 | 0 | 0 |
+| Brazil | 0 | 0 | 0 | 0 | 0 | 0 |
+| Netherlands | 0 | 0 | 0 | 0 | 0 | 0 |
+| ... | ... | ... | ... | ... | ... | ... |
+| Cabo Verde| 0 | 0 | 0 | 0 | 0 | 0 |
 
 ### Justificacion
 
@@ -136,7 +153,7 @@ Partiendo de abajo hacia arriba
 ### Persistencia
 
 - [x] Crear modulo de Gestion de Archivos (Lectura de selecciones_clasificadas_mundial.csv).
-- [ ] Implementar logica de escritura de los nuevos archivos .csv (formato matriz Numero de Camiseta vs Pais).
+- [x] Implementar logica de escritura de los nuevos archivos .csv (formato matriz).
 
 ### Validacion
 
@@ -165,3 +182,38 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/importAndExport"
      DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 ```
+
+### Logica de escritura de los nuevos archivos .csv
+
+El tiempo dedicado a esto fué mayor del esperado, ahora mismo estas novedades de avance, son una narracion de los hechos.
+
+#### Partimos de tener 7 ficheros correpondiente a las estadisticas por jugador:
+
+1. Goles
+2. Asistencias
+3. TjAmarillas
+4. TjRojas
+5. TjFaltas
+6. MinutosJugados
+7. PartidosJugados
+
+Todos con la misma extructura mencionada en la parte superior de este mismo documento, el orden de los paises es el mismo en que entran los datos. Esto se garantiza al hacer la carga de datos. Independientemente del contenido previo los documentos exportables. Al tratarse un programa en desarrollo la escritura en ficheros del base esta prohibida y se emplea manipulacion de ficheros en el entorno `build`.
+
+#### 2 por equipo
+
+1. Para los datos que requieren manipulacion (escritura)
+2. Solo lectura (el fichero que se importa).
+
+La idea con la reutilizacion es reducir la carga en memoria al escribir, y ademas, tener una forma de acceder a las etiquetas inamovibles de cada equipo. Esto es su director tecnico, Federación y Confederación para posteriormente poder agrupar estadisticas.
+
+---
+
+### Nueva clase
+
+Para la manipulacion de documentos se hizo necesaio implementar la clase `GestorData`, en la cual se busca centralizar la logica de manipulacion de datos en los ficheros .csv.
+
+Actualmente cuenta con los siguentes metodos:
+
+1. exportarMatrizFicherosDataJugador
+2. obtenerDatoSegunTipoDataJugador
+3. actualizarDatosPaisDataJugador

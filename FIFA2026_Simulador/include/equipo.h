@@ -8,8 +8,7 @@ using std::string;
 
 class Jugador; // Declaración adelantada
 
-class Equipo
-{
+class Equipo {
 private:
     int rankingFIFA;
     string pais;

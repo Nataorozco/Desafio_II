@@ -23,6 +23,15 @@ add_executable(FIFA2026_Simulador
     include/equipo.h
     include/jugador.h
     importAndExport/selecciones_clasificadas_mundial.csv
+    importAndExport/export/goles-por-jugador.csv
+    importAndExport/export/asistencias.csv
+    importAndExport/export/faltas-acumuladas.csv
+    importAndExport/export/minutos-jugados.csv
+    importAndExport/export/partidos-jugados.csv
+    importAndExport/export/tarjetas_amarillas.csv
+    importAndExport/export/tarjetas-rojas.csv
+    include/GestorData.h
+    src/GestorData.cpp
 )
 
 # 3. Configuración obligatoria de Qt

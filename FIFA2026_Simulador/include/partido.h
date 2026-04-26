@@ -19,7 +19,7 @@ class Partido {
         Equipo* equipoGanador;
     public:
         void simularPartido();
-        void actualizarResultado(int golesEquipo1, int golesEquipo2);
+        void actualizarResultado();
 };
 
 #endif

@@ -1,6 +1,5 @@
 #ifndef VECTOR_H
 #define VECTOR_H
-#include <iostream>
 
 
 template <typename T>
@@ -81,12 +80,6 @@ public:
     // 8. Métodos de utilidad
     int getTamano() const { return tamano; }
 
-    // 9. Medición de consumo de memoria (Requisito V [5])
-    size_t calcularMemoria() const {
-        size_t memoriaBase = sizeof(*this);
-        size_t memoriaDinamica = sizeof(T) * capacidad;
-        return memoriaBase + memoriaDinamica;
-    }
 };
 
 #endif

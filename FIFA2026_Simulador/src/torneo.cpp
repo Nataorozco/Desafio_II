@@ -1,8 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "torneo.h"
-#include "equipo.h"
-#include "vector.h"
+#include "GestorData.h"
 
 using namespace std;
 
@@ -111,6 +110,24 @@ void Torneo::cargarDatos(const string& rutaCSV) {
     }
 
     archivo.close();
+
+
+    std::string rutasExport[] = {
+    "importAndExport/export/goles-por-jugador.csv",    // Case 1
+    "importAndExport/export/asistencias.csv",          // Case 2
+    "importAndExport/export/tarjetas_amarillas.csv",   // Case 3
+    "importAndExport/export/tarjetas-rojas.csv",       // Case 4
+    "importAndExport/export/faltas-acumuladas.csv",    // Case 5
+    "importAndExport/export/minutos-jugados.csv",      // Case 6
+    "importAndExport/export/partidos-jugados.csv"      // Case 7
+    };
+
+    for (int i = 0; i < 7; ++i) {
+        // i+1 enviará 1 para goles, 2 para asistencias, etc.
+        GestorData::exportarMatrizFicherosDataJugador(rutasExport[i], equipos, i + 1);
+    }
+    
+
 
     cout << "CARGA DE DATOS COMPLETADA" << endl;
     cout << "Total de equipos cargados: " << equiposCargados << endl;

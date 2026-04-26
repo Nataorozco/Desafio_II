@@ -11,13 +11,13 @@ private:
     int numeroCamiseta;
 
     // Estadísticas que se actualizan tras cada partido
-    int partidosJugados;
     int goles;
-    int minutosJugados;
     int asistencias;
     int tarjetasAmarillas;
     int tarjetasRojas;
     int faltas;
+    int partidosJugados;
+    int minutosJugados;
 
 public:
     // (Constructor de copia obligatorio)
@@ -42,6 +42,9 @@ public:
     int getTjAmarillas() const;
     int getTjRojas() const;
     int getTjFaltas() const;
+    int getAsistencias() const;
+    int getMinutosJugados() const;
+    int getPartidosJugados() const;
 
     ~Jugador();
 

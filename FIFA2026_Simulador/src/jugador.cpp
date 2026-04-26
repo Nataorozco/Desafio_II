@@ -38,5 +38,13 @@ void Jugador::cometerFalta() { faltas++; }
 std::string Jugador::getNombreCompleto() const { return nombre + " " + apellido; }
 int Jugador::getCamiseta() const {return numeroCamiseta;}
 int Jugador::getGoles() const { return goles; }
+int Jugador::getAsistencias() const { return asistencias; }
+int Jugador::getTjAmarillas() const { return tarjetasAmarillas; }
+int Jugador::getTjRojas() const { return tarjetasRojas; }
+int Jugador::getTjFaltas() const { return faltas; }
+int Jugador::getMinutosJugados() const { return minutosJugados; }
+int Jugador::getPartidosJugados() const { return partidosJugados; }
+
+
 
 Jugador::~Jugador() {}
