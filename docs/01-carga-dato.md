@@ -158,7 +158,7 @@ Partiendo de abajo hacia arriba
 ### Validacion
 
 - [x] Verificar que la suma de goles de los jugadores coincida con el total del equipo tras la carga inicial.
-- [ ] Comprobar que los archivos de salida se generan correctamente y son legibles.
+- [x] Comprobar que los archivos de salida se generan correctamente y son legibles.
 
 ## Novedades de avance
 
@@ -217,3 +217,8 @@ Actualmente cuenta con los siguentes metodos:
 1. exportarMatrizFicherosDataJugador
 2. obtenerDatoSegunTipoDataJugador
 3. actualizarDatosPaisDataJugador
+
+
+La etapa de carga de datos, termina aqui. Acontinuacion se agregan evidencias de funcionamiento hasta este punto:
+
+![Muestra Carga de Datos](./img/01-muestra-despues-de-carga.png)
