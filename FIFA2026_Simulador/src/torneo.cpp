@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "torneo.h"
-#include "GestorData.h"
+// #include "GestorData.h"
 
 using namespace std;
 
@@ -118,7 +118,52 @@ void Torneo::cargarDatos(const string& rutaCSV) {
 }
 
 void Torneo::conformarFaseGrupos() {
-    // TODO: Implementar conformación de grupos
+    if (equipos.getTamano() == 0) {
+        cerr << "Error: No hay equipos cargados para conformar los grupos." << endl;
+        return;
+    }
+
+    int totalEquipos = equipos.getTamano();
+    Vector<Equipo*> equiposOrdenados;
+    std::string anfitrion = "United States";
+
+    // 1. Encontrar y agregar al país anfitrión de primero (va al Bombo 1) [1]
+    for (int i = 0; i < totalEquipos; ++i) {
+        if (equipos[i]->getPais() == anfitrion) {
+            equiposOrdenados.push_back(equipos[i]);
+            break;
+        }
+    }
+
+    // 2. Agregar equipos restantes (ya ordenados por ranking FIFA en el vector original)
+    for (int i = 0; i < totalEquipos; ++i) {
+        // Se omite al anfitrión porque ya se agregó en la primera posición
+        if (equipos[i]->getPais() != anfitrion) {
+            equiposOrdenados.push_back(equipos[i]);
+        }
+    }
+
+    // Declaración de los 4 bombos de 12 selecciones cada uno [1]
+    Vector<Equipo*> bombo1, bombo2, bombo3, bombo4;
+
+    // 3. Lógica para repartir los equipos en los bombos
+    // Esta función auxiliar llena un bombo con 12 equipos desde un índice específico
+    auto asignarEquiposABombo = [&](Vector<Equipo*>& bomboDestino, int indiceInicio) {
+        for (int i = 0; i < 12; ++i) {
+            if ((indiceInicio + i) < equiposOrdenados.getTamano()) {
+                bomboDestino.push_back(equiposOrdenados[indiceInicio + i]);
+            }
+        }
+    };
+
+    // 4. Conformación de los bombos según el ranking
+    asignarEquiposABombo(bombo1, 0);  // Mejores rankings + Anfitrión
+    asignarEquiposABombo(bombo2, 12);
+    asignarEquiposABombo(bombo3, 24);
+    asignarEquiposABombo(bombo4, 36); // Peores rankings
+
+    // TODO: El siguiente paso sería extraer un equipo de cada bombo al azar
+    // para formar los 12 grupos finales, respetando las restricciones de confederación [1, 4].
 }
 
 void Torneo::simularFaseGrupos() {
