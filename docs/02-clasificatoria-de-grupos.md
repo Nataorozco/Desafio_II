@@ -19,27 +19,38 @@ Los equipos del mundial 2026 se organizan en 12 grupos, cada grupo se identifica
 
 ## Analisis preliminar
 
-Se identifica una entidad nueva que no se habia identificado previamente. La implementacion de la misma seguirá esta ruta:
+Se implementa la clase `Grupo` identificada previamente, a la que no se le habia encontrado utilidad. La implementacion de la misma seguirá esta ruta:
 
 ```mermaid
 
 classDiagram
+    class Torneo {
+        - equipos : Vector~Equipo*~
+        - grupos : Vector~Grupo*~
+        + conformarFaseGrupos()
+        + sortearBacktracking(bIdx, gIdx, bombos, grupos, it) bool
+    }
     class Grupo {
         - idGrupo : string
         - equipos : Vector~Equipo*~
-        + agregarEquipo(e : Equipo*) : bool
-        + esValido(e : Equipo*) : bool
-        - contarEquiposPorConfederacion(conf : string) : int
-        + toString() : string
+        + agregarEquipo(e : Equipo*) bool
+        + esValido(e : Equipo*) bool
+        + quitarUltimoEquipo()
+        + toString() string
     }
-
+    class Bombo {
+        + mezclar(it : long long&)
+    }
     class Equipo {
-        - nombre : string
-        - confederacion : string
-        - ranking : int
+        - asignado : bool
+        + isAsignado() bool
+        + setAsignado(bool)
     }
 
-    Grupo "1" --> "0..4" Equipo : apunta a
+    Torneo "1" *-- "12" Grupo : gestiona
+    Torneo ..> Bombo : utiliza temporalmente
+    Grupo "1" o-- "4" Equipo : contiene
+    Bombo --|> Vector : hereda
 
 
 ```
@@ -54,10 +65,11 @@ classDiagram
     - [x] Segmentar el vector ordenado en 4 sub-vectores (Vector<Equipo*>) de 12 elementos cada uno
 
 - [ ] Módulo de Sorteo (Grupos):
-    - [ ] Crear 12 instancias de la clase Grupo.
-    - [ ] Implementar la lógica de selección aleatoria (un equipo de cada bombo por grupo)
+    - [x] Crear 12 instancias de la clase Grupo.
+    - [x] Implementar la lógica de selección aleatoria (un equipo de cada bombo por grupo)
     - [ ] Validación de Confederación: Desarrollar el algoritmo que verifique la restricción geográfica (máximo 1 de cada confederación, excepto UEFA que permite 2)
 > [!NOTE]
 > Si un sorteo viola esta regla, el equipo debe re-sortearse o moverse al siguiente grupo disponible.
-- [ ] Módulo de Visualización:
-    - [ ] Sobrecargar el operador de inserción o usar toString() para mostrar los 12 grupos con sus países y confederaciones
+- [x] Módulo de Visualización:
+    - [x] Sobrecargar el operador de inserción o usar toString() para mostrar los 12 grupos con sus países y confederaciones
+

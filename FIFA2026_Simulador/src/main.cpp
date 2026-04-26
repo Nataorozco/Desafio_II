@@ -1,7 +1,7 @@
 #include <iostream>
 #include "torneo.h"
 #include "equipo.h"
-#include "jugador.h"
+// #include "jugador.h"
 
 using namespace std;
 
@@ -18,18 +18,21 @@ int main() {
     // Cargar datos desde el CSV
     torneo.cargarDatos(rutaRelativa);
 
-    Vector<Equipo*>& equipos = torneo.getEquipos();
-    Equipo* equipo = equipos[10];
+    // Vector<Equipo*>& equipos = torneo.getEquipos();
+    // Equipo* equipo = equipos[10];
 
-    cout << "\nJugadores del equipo " << equipo->getPais() <<  " en el sistema:" << endl;
+    // cout << "\nJugadores del equipo " << equipo->getPais() <<  " en el sistema:" << endl;
 
-    const Vector<Jugador*>& jugadores = equipo->getJugadores();
+    // const Vector<Jugador*>& jugadores = equipo->getJugadores();
 
-    for (int i = 0; i < jugadores.getTamano(); ++i) {
-        Jugador* jugador = jugadores[i];
-        cout << "\n  Jugador["+to_string(i)<< "]: " << jugador->getNombreCompleto() << " " << jugador->getCamiseta() << endl;
-        cout << "  Cantidad de goles " << jugador->getGoles() << endl;
-    }
+    // for (int i = 0; i < jugadores.getTamano(); ++i) {
+    //     Jugador* jugador = jugadores[i];
+    //     cout << "\n  Jugador["+to_string(i)<< "]: " << jugador->getNombreCompleto() << " " << jugador->getCamiseta() << endl;
+    //     cout << "  Cantidad de goles " << jugador->getGoles() << endl;
+    // }
+
+    torneo.conformarFaseGrupos();
+
 
     return 0;
 }

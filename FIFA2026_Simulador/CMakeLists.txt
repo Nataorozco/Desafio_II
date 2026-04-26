@@ -32,6 +32,10 @@ add_executable(FIFA2026_Simulador
     importAndExport/export/tarjetas-rojas.csv
     include/GestorData.h
     src/GestorData.cpp
+    include/Grupo.h
+    src/Grupo.cpp
+    include/Bombo.h
+    src/Bombo.cpp
 )
 
 # 3. Configuración obligatoria de Qt

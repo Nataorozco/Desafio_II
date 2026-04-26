@@ -15,6 +15,7 @@ private:
     string directorTecnico;
     string federacion;
     string confederacion;
+    bool asignado;
 
     // Estadísticas históricas
     int golesAFavor;
@@ -33,7 +34,7 @@ public:
     // Constructor
     Equipo(int ranking, const string& pais, const string& director,
            const string& federacion, const string& confederacion,
-           int gf, int gc, int pg, int pe, int pp);
+           int gf, int gc, int pg, int pe, int pp, bool asignado);
 
     // Destructor
     ~Equipo();
@@ -68,6 +69,9 @@ public:
 
     // Método para repatir goles
     void repartirGolesCargaInicial();
+
+    bool isAsignado() const;
+    void setAsignado(bool estado);
 };
 
 #endif // EQUIPO_H

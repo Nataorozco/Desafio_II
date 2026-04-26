@@ -80,6 +80,22 @@ public:
     // 8. Métodos de utilidad
     int getTamano() const { return tamano; }
 
+
+    // 9. Método para eliminar un elemnto del array
+    void removeAt(int indice) {
+        if (indice < 0 || indice >= tamano) return;
+        // Desplazamos los elementos a la izquierda para cubrir el hueco
+        for (int i = indice; i < tamano - 1; i++) {
+            data[i] = data[i + 1];
+        }
+        tamano--; // Reducimos el tamaño lógico
+    }
+
+    // 10. liberacion de memoria para reusar el espacio
+    void clear() {
+        tamano = 0;
+    }
+
 };
 
 #endif

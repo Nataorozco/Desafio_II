@@ -6,7 +6,7 @@ using namespace std;
 
 Equipo::Equipo(int ranking, const string& pais, const string& director,
                const string& federacion, const string& confederacion,
-               int gf, int gc, int pg, int pe, int pp)
+               int gf, int gc, int pg, int pe, int pp,bool asignado = false)
     : rankingFIFA(ranking), pais(pais), directorTecnico(director),
     federacion(federacion), confederacion(confederacion),
     golesAFavor(gf), golesEnContra(gc),
@@ -80,4 +80,12 @@ void Equipo::repartirGolesCargaInicial() {
         // 3. Asignar al objeto jugador
         jugadores[i]->setGoles(golesParaEsteJugador);
     }
+}
+
+bool Equipo::isAsignado() const {
+    return asignado;
+}
+
+void Equipo::setAsignado(bool estado) {
+    asignado = estado;
 }

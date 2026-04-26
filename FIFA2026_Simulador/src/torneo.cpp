@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include "torneo.h"
+#include <random>
+
 // #include "GestorData.h"
 
 using namespace std;
@@ -92,7 +94,7 @@ void Torneo::cargarDatos(const string& rutaCSV) {
             Equipo* nuevoEquipo = new Equipo(ranking, pais, director, federacion,
                                              confederacion, golesAFavor, golesEnContra,
                                              partidosGanados, partidosEmpatados,
-                                             partidosPerdidos);
+                                             partidosPerdidos, false);
 
             // Asignar goles a judaores
             nuevoEquipo->repartirGolesCargaInicial();
@@ -123,48 +125,146 @@ void Torneo::conformarFaseGrupos() {
         return;
     }
 
-    int totalEquipos = equipos.getTamano();
-    Vector<Equipo*> equiposOrdenados;
-    std::string anfitrion = "United States";
+    // Bombos
+    Bombo bombo1, bombo2, bombo3, bombo4;
 
-    // 1. Encontrar y agregar al país anfitrión de primero (va al Bombo 1) [1]
-    for (int i = 0; i < totalEquipos; ++i) {
-        if (equipos[i]->getPais() == anfitrion) {
-            equiposOrdenados.push_back(equipos[i]);
+    // Buscamos al anfitrión (USA) para asegurarlo en la primera posición
+    Equipo* anfitrion = nullptr;
+    for (int i = 0; i < equipos.getTamano(); ++i) {
+        if (equipos[i]->getPais() == "United States") {
+            anfitrion = equipos[i];
             break;
         }
     }
 
-    // 2. Agregar equipos restantes (ya ordenados por ranking FIFA en el vector original)
-    for (int i = 0; i < totalEquipos; ++i) {
-        // Se omite al anfitrión porque ya se agregó en la primera posición
-        if (equipos[i]->getPais() != anfitrion) {
+    Vector<Equipo*> equiposOrdenados;
+
+    // 1. El anfitrión siempre va primero
+    if (anfitrion != nullptr) {
+        equiposOrdenados.push_back(anfitrion);
+    }
+
+    // 2. Agregar el resto de los equipos
+    for (int i = 0; i < equipos.getTamano(); ++i) {
+        if (equipos[i] != anfitrion) {
             equiposOrdenados.push_back(equipos[i]);
         }
     }
 
-    // Declaración de los 4 bombos de 12 selecciones cada uno [1]
-    Vector<Equipo*> bombo1, bombo2, bombo3, bombo4;
-
-    // 3. Lógica para repartir los equipos en los bombos
-    // Esta función auxiliar llena un bombo con 12 equipos desde un índice específico
-    auto asignarEquiposABombo = [&](Vector<Equipo*>& bomboDestino, int indiceInicio) {
-        for (int i = 0; i < 12; ++i) {
-            if ((indiceInicio + i) < equiposOrdenados.getTamano()) {
-                bomboDestino.push_back(equiposOrdenados[indiceInicio + i]);
+    // 3. Ordenar por Ranking FIFA (Omitiendo al anfitrión en la posición 0)
+    // Se usa un ordenamiento burbuja sencillo para respetar la restricción de "No STL"
+    for (int i = 1; i < equiposOrdenados.getTamano() - 1; ++i) {
+        for (int j = 1; j < equiposOrdenados.getTamano() - i; ++j) {
+            if (equiposOrdenados[j]->getRankingFIFA() > equiposOrdenados[j+1]->getRankingFIFA()) {
+                Equipo* temp = equiposOrdenados[j];
+                equiposOrdenados[j] = equiposOrdenados[j+1];
+                equiposOrdenados[j+1] = temp;
             }
         }
-    };
+    }
 
-    // 4. Conformación de los bombos según el ranking
-    asignarEquiposABombo(bombo1, 0);  // Mejores rankings + Anfitrión
-    asignarEquiposABombo(bombo2, 12);
-    asignarEquiposABombo(bombo3, 24);
-    asignarEquiposABombo(bombo4, 36); // Peores rankings
+    int gruposPorBombo = 12;
 
-    // TODO: El siguiente paso sería extraer un equipo de cada bombo al azar
-    // para formar los 12 grupos finales, respetando las restricciones de confederación [1, 4].
+    // 4. Repartir en bombos según el ranking ya ordenado
+    for (int i = 0; i < gruposPorBombo; ++i) {
+        bombo1.push_back(equiposOrdenados[i]);
+        bombo2.push_back(equiposOrdenados[i + 12]);
+        bombo3.push_back(equiposOrdenados[i + 24]);
+        bombo4.push_back(equiposOrdenados[i + 36]);
+    }
+
+    grupos.clear();
+
+    // 5. Crear los 12 grupos (A-L)
+    for (int i = 0; i < gruposPorBombo; ++i) {
+        std::string letra(1, 'A' + i);
+        grupos.push_back(new Grupo(letra));
+    }
+
+    // 6. Asignación del Bombo 1 (Cabezas de serie)
+    // El anfitrión (USA) típicamente va al Grupo A (índice 0)
+    grupos[0]->agregarEquipo(bombo1[0]); // Asignamos USA al Grupo A
+    bombo1.removeAt(0);
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    // Asignamos el resto de los cabezas de serie aleatoriamente a los grupos B-L
+    for (int i = 1; i < gruposPorBombo; ++i) {
+        std::uniform_int_distribution<> distrib(0, bombo1.getTamano() - 1);
+        int numeroAleatorio = distrib(gen);
+        grupos[i]->agregarEquipo(bombo1[numeroAleatorio]);
+        bombo1.removeAt(numeroAleatorio);
+    }
+
+    // 7. Preparar Sorteo (Backtracking)
+    long long iteraciones = 0;
+
+    // Asumiendo que implementaste un método mezclar() en tu clase Bombo
+    bombo2.mezclar(iteraciones);
+    bombo3.mezclar(iteraciones);
+    bombo4.mezclar(iteraciones);
+
+    Bombo* bombosArray[] = { &bombo1, &bombo2, &bombo3, &bombo4 };
+
+    //Iniciar el retroceso desde el Bombo 2 (índice 1) y Grupo A (índice 0)
+    if (!sortearBacktracking(1, 0, bombosArray, grupos, iteraciones)) {
+        cerr << "Error: No se encontró una configuración válida para los grupos." << endl;
+    } else {
+        cout << "\n--- SORTEO FINALIZADO CON EXITO ---" << endl;
+        // Imprimir grupos (Asegúrate de tener un método toString() o similar)
+        for(int i = 0; i < grupos.getTamano(); ++i) {
+            cout << grupos[i]->toString() << endl;
+        }
+    }
+
+    // Requisito V: Mostrar métricas
+    cout << "\nEstadisticas de Eficiencia:" << endl;
+    cout << "Iteraciones de Backtracking: " << iteraciones << endl;
+    // cout << "Memoria total: " << calcularMemoria() << " bytes" << endl; // Descomentar si lo tienes
 }
+
+bool Torneo::sortearBacktracking(int bIdx, int gIdx, Bombo* bombos[], Vector<Grupo*>& grupos, long long& it) {
+    it++; // Contar cada paso recursivo
+
+    // Caso base: Si ya pasamos el último bombo (índice 3 es el bombo 4), terminamos con éxito.
+    if (bIdx > 3) return true;
+
+    // Calcular siguiente paso
+    // Si llegamos al grupo 11 (Grupo L), saltamos al siguiente bombo y volvemos al grupo 0.
+    int sigG = (gIdx + 1) % 12;
+    int sigB = (sigG == 0) ? bIdx + 1 : bIdx;
+
+    Bombo& bActual = *bombos[bIdx];
+
+    for (int i = 0; i < bActual.getTamano(); ++i) {
+        Equipo* e = bActual[i];
+
+        // Solo probamos con equipos que no han sido asignados
+        if (!e->isAsignado()) {
+
+            // Intentamos agregar al equipo. Asumiendo que tu método 'agregarEquipo'
+            // ya incluye internamente la llamada a tu 'esValido()' y retorna true si fue exitoso.
+            if (grupos[gIdx]->agregarEquipo(e)) {
+                e->setAsignado(true);
+
+                // Llamada recursiva (avanzamos en profundidad)
+                if (sortearBacktracking(sigB, sigG, bombos, grupos, it)) {
+                    return true; // Encontramos el camino correcto
+                }
+
+                // RETROCESO (Backtracking): Si la rama falló, deshacemos los cambios
+                grupos[gIdx]->quitarUltimoEquipo();
+                e->setAsignado(false);
+            }
+        }
+    }
+
+    // Si probamos todos los equipos de este bombo y ninguno encaja, retornamos false (callejón sin salida)
+    return false;
+}
+
+
 
 void Torneo::simularFaseGrupos() {
     // TODO: Implementar simulación de fase de grupos
