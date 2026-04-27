@@ -2,8 +2,8 @@
 #define GRUPO_H
 
 #include <string>
-#include "Vector.h" // Tu implementación propia de Vector
-#include "Equipo.h"
+#include "vector.h" // Tu implementación propia de Vector
+#include "equipo.h"
 
 class Grupo {
 private:

@@ -1,8 +1,8 @@
 #ifndef BOMBO_H
 #define BOMBO_H
 
-#include "Vector.h"
-#include "Equipo.h"
+#include "vector.h"
+#include "equipo.h"
 #include <iostream>
 
 class Bombo : public Vector<Equipo*> {

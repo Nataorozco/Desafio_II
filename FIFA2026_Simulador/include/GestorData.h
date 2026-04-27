@@ -4,7 +4,7 @@
 #include <string>
 #include "vector.h"
 #include "equipo.h"
-#include "Jugador.h"
+#include "jugador.h"
 
 class GestorData {
 public:

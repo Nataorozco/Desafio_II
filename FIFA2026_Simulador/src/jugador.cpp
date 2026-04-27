@@ -1,4 +1,4 @@
-#include "Jugador.h"
+#include "jugador.h"
 
 // Inicialización de estadísticas en cero según el Requisito
 Jugador::Jugador() : nombre(""), apellido(""), numeroCamiseta(0),
