@@ -6,3 +6,7 @@
 Esta actividad esta siendo desarrollada por:
 1. Claudia Nataly Orozco Ocampo
 2. Elmer David Mosquera Martinez
+
+## Video de presentacion
+
+https://us06web.zoom.us/rec/share/oHcGc5k80X36nlYTIUjceJJhPwxmgPLeZUh9dASOPD8Uyv0x4fBpPMK9P_-QJG8H.da3gxUqK8JsOAbE9 
